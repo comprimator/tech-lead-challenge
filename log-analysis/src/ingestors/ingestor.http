@@ -1,0 +1,71 @@
+### Get all ingestors
+GET http://localhost:3000/ingestors
+Accept: application/json
+
+###
+
+### Create a new ingestor
+POST http://localhost:3000/ingestors
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "ApplicationLogs",
+  "type": "FileIngestor",
+  "module": "file-ingestor",
+  "enabled": true,
+  "options": {
+    "filePaths": [
+      "/var/log/myapp/app.log"
+    ]
+  }
+}
+
+> {% client.global.set("ingestorId", response.body._id); %}
+
+
+### Create a new ingestor
+POST http://localhost:3000/ingestors
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "ApplicationLogs",
+  "type": "DockerIngestor",
+  "module": "docker-ingestor",
+  "enabled": true,
+  "options": {
+    "containerIds": [
+      "c15ba38e12c9"
+    ]
+  }
+}
+
+> {% client.global.set("ingestorId", response.body._id); %}
+
+
+###
+
+### Update an existing ingestor
+### Note: The ingestorId is set from the previous response
+PUT http://localhost:3000/ingestors/{{ingestorId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "enabled": false,
+  "options": {
+    "filePaths": [
+      "/var/log/myapp/new_app.log"
+    ]
+  }
+}
+
+###
+
+### Delete an ingestor
+### Note: The ingestorId is used from the previous responses
+DELETE http://localhost:3000/ingestors/{{ingestorId}}
+Accept: application/json
+
+###
