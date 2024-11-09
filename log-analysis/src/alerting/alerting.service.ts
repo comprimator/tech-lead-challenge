@@ -39,8 +39,7 @@ export class AlertingService implements OnModuleInit, OnModuleDestroy {
   }
 
   async findAll() {
-    const list = await this.alertRulesCollection.find().toArray();
-    return list;
+    return await this.alertRulesCollection.find().toArray();
   }
 
   async create(alertRule: AlertRule) {

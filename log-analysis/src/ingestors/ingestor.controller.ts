@@ -8,7 +8,6 @@ import {
   Param,
   Inject,
 } from '@nestjs/common';
-import { ObjectId } from 'mongodb';
 import { CreateIngestorDto } from './dto/create-ingestor.dto';
 import { UpdateIngestorDto } from './dto/update-ingestor.dto'; // Import the Update DTO
 import { IngestorConfig } from './ingestor.interface';
