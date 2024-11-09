@@ -1,8 +1,68 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/log-ingestor/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": false,
+    "tsConfigPath": "apps/log-ingestor/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/log-ingestor",
+  "projects": {
+    "log-ingestor": {
+      "type": "application",
+      "root": "apps/log-ingestor",
+      "entryFile": "main",
+      "sourceRoot": "apps/log-ingestor/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/log-ingestor/tsconfig.app.json"
+      }
+    },
+    "log-processor": {
+      "type": "application",
+      "root": "apps/log-processor",
+      "entryFile": "main",
+      "sourceRoot": "apps/log-processor/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/log-processor/tsconfig.app.json"
+      }
+    },
+    "log-indexer": {
+      "type": "application",
+      "root": "apps/log-indexer",
+      "entryFile": "main",
+      "sourceRoot": "apps/log-indexer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/log-indexer/tsconfig.app.json"
+      }
+    },
+    "log-alerting": {
+      "type": "application",
+      "root": "apps/log-alerting",
+      "entryFile": "main",
+      "sourceRoot": "apps/log-alerting/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/log-alerting/tsconfig.app.json"
+      }
+    },
+    "shared-lib": {
+      "type": "library",
+      "root": "libs/shared-lib",
+      "entryFile": "index",
+      "sourceRoot": "libs/shared-lib/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/shared-lib/tsconfig.lib.json"
+      }
+    },
+    "log-query": {
+      "type": "application",
+      "root": "apps/log-query",
+      "entryFile": "main",
+      "sourceRoot": "apps/log-query/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/log-query/tsconfig.app.json"
+      }
+    }
   }
 }
