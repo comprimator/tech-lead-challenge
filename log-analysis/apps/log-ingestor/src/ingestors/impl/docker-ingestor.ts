@@ -7,7 +7,10 @@ import { Logger } from '@nestjs/common';
 
 export class DockerIngestor extends EventEmitter implements IIngestor {
   private readonly docker;
-  private containers: Container[] = [];
+  private containers: {
+    logStream?: NodeJS.ReadableStream;
+    container: Container;
+  }[] = [];
   private readonly containerIds: string[];
   private readonly logger = new Logger(this.constructor.name);
 
@@ -31,15 +34,16 @@ export class DockerIngestor extends EventEmitter implements IIngestor {
 
   async start(): Promise<void> {
     for (const id of this.containerIds) {
-      const container = this.docker.getContainer(id);
-      this.containers.push(container);
-      await this.attachLogStream(container);
+      const container: Container = this.docker.getContainer(id);
+      const logStream = await this.attachLogStream(container);
+      this.containers.push({ container, logStream });
     }
   }
 
   async stop(): Promise<void> {
     for (const container of this.containers) {
-      container.modem.destroy();
+      container.logStream?.unpipe();
+      container.logStream?.removeAllListeners();
     }
     this.containers = [];
   }
@@ -72,5 +76,7 @@ export class DockerIngestor extends EventEmitter implements IIngestor {
     stream.on('end', () => {
       this.logger.debug(`Log stream ended for container ${container.id}`);
     });
+
+    return stream;
   }
 }

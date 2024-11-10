@@ -7,9 +7,11 @@ import {
   Body,
   Param,
   Inject,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreateIngestorDto } from './dto/create-ingestor.dto';
-import { UpdateIngestorDto } from './dto/update-ingestor.dto'; // Import the Update DTO
+import { UpdateIngestorDto } from './dto/update-ingestor.dto';
 import { IngestorConfig } from './ingestor.interface';
 import { IngestorService } from './ingestor.service';
 
@@ -18,6 +20,33 @@ export class IngestorController {
   constructor(
     @Inject(IngestorService) private readonly ingestorService: IngestorService,
   ) {}
+
+  @Put('start')
+  async startAll(): Promise<void> {
+    await this.ingestorService.startAll();
+  }
+
+  @Put('stop')
+  async stopAll(): Promise<void> {
+    await this.ingestorService.stopAll();
+  }
+
+  @Put(':id/start')
+  async start(@Param('id') id: string): Promise<void> {
+    const ingestor = await this.ingestorService.getOne(id);
+    if (!ingestor) {
+      throw new HttpException(
+        `Ingestor with id ${id} not found`,
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    await this.ingestorService.startIngestor(ingestor);
+  }
+
+  @Put(':id/stop')
+  async stop(@Param('id') id: string): Promise<void> {
+    await this.ingestorService.stopIngester(id);
+  }
 
   @Get()
   async findAll(): Promise<IngestorConfig[]> {

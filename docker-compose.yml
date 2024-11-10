@@ -180,9 +180,64 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
+  log-alerting:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile: Dockerfile
+#    labels:
+#      - "traefik.http.routers.alerting.rule=PathPrefix(`/alerts`)"
+#      - "traefik.http.services.alerting.loadbalancer.server.port=3002"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    env_file:
+        - .env.services
+    command: [ "npm", "run", "start:alerting" ]
+
+  log-indexer:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile: Dockerfile
+    depends_on:
+      es01:
+        condition: service_healthy
+    env_file:
+      - .env.services
+    command: [ "npm", "run", "start:indexer" ]
+
   log-ingestor:
     image: log-analysis
     build:
       context: ./log-analysis
       dockerfile:  Dockerfile
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    env_file:
+      - .env.services
     command: ["npm", "run", "start:ingestor"]
+
+  log-processor:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile: Dockerfile
+    depends_on:
+      - log-ingestor
+      - log-indexer
+    env_file:
+      - .env.services
+    command: [ "npm", "run", "start:processor" ]
+
+  log-query:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile: Dockerfile
+    env_file:
+      - .env.services
+    depends_on:
+      - es01
+    command: [ "npm", "run", "start:query" ]

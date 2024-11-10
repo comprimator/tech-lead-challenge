@@ -14,11 +14,7 @@ RUN npm install
 COPY . .
 
 # Build All NestJS applications
-RUN npm run build log-alerting && \
-    npm run build log-indexer && \
-    npm run build log-ingestor &&  \
-    npm run build log-processor &&  \
-    npm run build log-query
+RUN npm run build:all
 
 # Expose the application port
 EXPOSE 3000-3004

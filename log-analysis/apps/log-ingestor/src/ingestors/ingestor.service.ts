@@ -38,6 +38,10 @@ export class IngestorService implements OnModuleInit, OnModuleDestroy {
     return await this.ingestorCollection.find({ enabled }).toArray();
   }
 
+  async getOne(id: string) {
+    return await this.ingestorCollection.findOne({ _id: new ObjectId(id) });
+  }
+
   async createAndStart(ingestor: IngestorConfig) {
     const result = await this.ingestorCollection.insertOne(ingestor);
     await this.addOrUpdateIngestor({ ...ingestor, _id: result.insertedId });
@@ -57,10 +61,10 @@ export class IngestorService implements OnModuleInit, OnModuleDestroy {
 
   async deleteAndStop(id: string) {
     await this.ingestorCollection.deleteOne({ _id: new ObjectId(id) });
-    await this.stopIngester(new ObjectId(id));
+    await this.stopIngester(id);
   }
 
-  private async startIngestor(config: IngestorConfig) {
+  async startIngestor(config: IngestorConfig) {
     const modulePath = ModuleWhitelist[config.type];
     if (!modulePath) {
       this.logger.error(`Ingestor type ${config.type} is not allowed`);
@@ -71,6 +75,13 @@ export class IngestorService implements OnModuleInit, OnModuleDestroy {
     const { [config.type]: IngestorClass } = await import(fullModulePath);
 
     const ingestor: IIngestor = new IngestorClass(config.options || {});
+
+    try {
+      await ingestor.initialize();
+    } catch (error) {
+      this.logger.error(`Error initializing ingestor ${config.name}:`, error);
+      return;
+    }
     await ingestor.initialize();
 
     ingestor.on('log', (logData) => {
@@ -102,16 +113,15 @@ export class IngestorService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  private async stopIngester(ingestorId: any) {
-    const ingestorKey = ingestorId.toString();
-    const ingestor = this.ingestors.get(ingestorKey);
+  async stopIngester(id: string) {
+    const ingestor = this.ingestors.get(id);
     if (ingestor) {
       await ingestor.stop();
-      this.ingestors.delete(ingestorKey);
+      this.ingestors.delete(id);
     }
   }
 
-  private async startAll() {
+  async startAll() {
     const configs = await this.getAll({ enabled: true });
 
     for (const config of configs) {
@@ -119,7 +129,7 @@ export class IngestorService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  private async stopAll() {
+  async stopAll() {
     for (const ingestor of this.ingestors.values()) {
       await ingestor.stop();
     }
