@@ -1,4 +1,4 @@
 #!/bin/sh
 ### shell script for stop the infrastructure services
 
-docker compose stop setup es01 kibana mongodb traefik
+docker compose -f docker-compose-infra.yml stop

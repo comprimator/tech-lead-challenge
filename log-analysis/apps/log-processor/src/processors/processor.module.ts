@@ -14,7 +14,7 @@ import { ProcessorController } from './processor.controller';
         useFactory: async (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: 'localhost',
+            host: configService.get('ALERTING_SERVICE_TCP_HOST') ?? 'localhost',
             port: configService.get('ALERTING_SERVICE_TCP_PORT'),
           },
         }),
@@ -28,7 +28,7 @@ import { ProcessorController } from './processor.controller';
         useFactory: async (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: 'localhost',
+            host: configService.get('INDEXER_SERVICE_TCP_HOST') ?? 'localhost',
             port: configService.get('INDEXER_SERVICE_TCP_PORT'),
           },
         }),

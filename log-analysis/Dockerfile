@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build:all
 
 # Expose the application port
-EXPOSE 3000-3004
+EXPOSE 3000-3010
 
 # Command to run the application
 #CMD ["node", "dist/main"]

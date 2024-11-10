@@ -16,7 +16,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         useFactory: async (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: 'localhost',
+            host:
+              configService.get('PROCESSOR_SERVICE_TCP_HOST') ?? 'localhost',
             port: configService.get('PROCESSOR_SERVICE_TCP_PORT'),
           },
         }),

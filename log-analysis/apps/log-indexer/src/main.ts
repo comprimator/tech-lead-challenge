@@ -10,6 +10,7 @@ async function bootstrap() {
     {
       transport: Transport.TCP,
       options: {
+        host: process.env.INDEXER_SERVICE_TCP_HOST ?? 'localhost',
         port: port,
         retryAttempts: 5,
         retryDelay: 3000,

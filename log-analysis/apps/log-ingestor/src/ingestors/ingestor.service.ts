@@ -82,7 +82,6 @@ export class IngestorService implements OnModuleInit, OnModuleDestroy {
       this.logger.error(`Error initializing ingestor ${config.name}:`, error);
       return;
     }
-    await ingestor.initialize();
 
     ingestor.on('log', (logData) => {
       this.logger.verbose(`Received log from ${config.name}: ${logData}`);
