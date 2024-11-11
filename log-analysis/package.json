@@ -1,0 +1,101 @@
+{
+  "name": "log-analysis",
+  "version": "0.0.1",
+  "description": "",
+  "author": "Vadim Guzeev",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build",
+    "build:indexer": "nest build log-indexer",
+    "build:ingestor": "nest build log-ingestor",
+    "build:processor": "nest build log-processor",
+    "build:alerting": "nest build log-alerting",
+    "build:query": "nest build log-query",
+    "build:all": "concurrently \"npm run build:indexer\" \"npm run build:ingestor\" \"npm run build:processor\" \"npm run build:alerting\" \"npm run build:query\"",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
+    "start": "nest start",
+    "start:indexer": "nest start log-indexer",
+    "start:ingestor": "nest start log-ingestor",
+    "start:processor": "nest start log-processor",
+    "start:alerting": "nest start log-alerting",
+    "start:query": "nest start log-query",
+    "start:all": "concurrently \"npm run start:indexer\" \"npm run start:ingestor\" \"npm run start:processor\" \"npm run start:alerting\" \"npm run start:query\"",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/apps/log-analysis/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config apps/log-ingestor/test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.15.1",
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.3.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/elasticsearch": "^10.0.2",
+    "@nestjs/mapped-types": "^2.0.6",
+    "@nestjs/microservices": "^10.4.7",
+    "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^8.0.5",
+    "@types/dockerode": "^3.3.31",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "dockerode": "^4.0.2",
+    "mongodb": "^6.10.0",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.1",
+    "winston": "^3.16.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
+    "@nestjs/schematics": "^10.0.0",
+    "@nestjs/testing": "^10.0.0",
+    "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.3.1",
+    "@types/supertest": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "concurrently": "^9.1.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "source-map-support": "^0.5.21",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.1.0",
+    "ts-loader": "^9.4.3",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": ".",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^@shared/shared-lib(|/.*)$": "<rootDir>/libs/shared-lib/src/$1"
+    }
+  }
+}

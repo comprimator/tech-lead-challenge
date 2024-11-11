@@ -1,0 +1,35 @@
+### Query Logs Endpoint
+
+# Basic request without query parameters
+GET http://localhost:3004/query/logs
+Content-Type: application/json
+
+###
+
+# Request with all query parameters
+GET http://localhost:3004/query/logs?startTime={{startTime}}&endTime={{endTime}}&source={{source}}&logLevel={{logLevel}}&message={{message}}&page={{page}}&size={{size}}
+Content-Type: application/json
+
+###
+
+# Example request with specific values
+GET http://localhost:3004/query/logs?startTime=202110-01T00:00:00Z&endTime=2025-10-31T23:59:59Z&size=10
+Content-Type: application/json-
+
+### Aggregate Logs Endpoint
+
+# Example request with all required parameters and sample values
+GET http://localhost:3004/query/logs/aggregations?aggregationField=timestamp&aggregationType=date_histogram&interval=minute
+Content-Type: application/json
+
+###
+
+# Example request with optional parameters included
+GET http://localhost:3004/query/logs/aggregations?startTime=2021-10-01T00:00:00Z&endTime=2021-10-31T23:59:59Z&source=MyService&logLevel=ERROR&aggregationField=timestamp&aggregationType=date_histogram&interval=day
+Content-Type: application/json
+
+###
+
+# Example request using 'terms' aggregation type
+GET http://localhost:3004/query/logs/aggregations?aggregationField=source&aggregationType=terms
+Content-Type: application/json

@@ -1,0 +1,78 @@
+volumes:
+  test_logs:
+    driver: local
+
+networks:
+  default:
+    name: log-analysis
+    external: false
+
+services:
+  log-alerting:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile: Dockerfile
+    ports:
+      - ${ALERTING_SERVICE_TCP_PORT}:${ALERTING_SERVICE_TCP_PORT}
+    env_file:
+      - .env.services
+    command: [ "npm", "run", "start:alerting" ]
+
+  log-indexer:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile: Dockerfile
+    ports:
+      - ${INDEXER_SERVICE_TCP_PORT}:${INDEXER_SERVICE_TCP_PORT}
+    env_file:
+      - .env.services
+    command: [ "npm", "run", "start:indexer" ]
+    volumes:
+      - test_logs:/app/logs
+
+  log-ingestor:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile:  Dockerfile
+    ports:
+      - ${INGESTOR_SERVICE_TCP_PORT}:${INGESTOR_SERVICE_TCP_PORT}
+    env_file:
+      - .env.services
+    command: ["npm", "run", "start:ingestor"]
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  log-processor:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile: Dockerfile
+    depends_on:
+      - log-ingestor
+    ports:
+      - ${PROCESSOR_SERVICE_TCP_PORT}:${PROCESSOR_SERVICE_TCP_PORT}
+    env_file:
+      - .env.services
+    command: [ "npm", "run", "start:processor" ]
+
+  log-query:
+    image: log-analysis
+    build:
+      context: ./log-analysis
+      dockerfile: Dockerfile
+    ports:
+      - ${QUERY_SERVICE_TCP_PORT}:${QUERY_SERVICE_TCP_PORT}
+    env_file:
+      - .env.services
+    command: [ "npm", "run", "start:query" ]
+
+#  log-generator:
+#    image: mingrammer/flog:latest
+#    container_name: log_generator
+#    volumes:
+#      - test_logs:/app/logs
+#    command: >
+#      '/bin/sh -c "while true; do flog -n5 >> /app/logs/test.log; sleep 3; done"'
