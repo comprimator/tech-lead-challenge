@@ -19,11 +19,9 @@ export class ProcessorService {
 
       this.indexerClient.emit('index_log', processedLog);
       this.logger.debug(`Emitted log to indexer`);
-      // await this.storageService.storeLog(processedLog);
 
       this.alertingClient.emit('log_item_received', processedLog);
       this.logger.debug(`Emitted log to alerting service`);
-      // this.alertingService.handleLog(processedLog);
     } catch (error) {
       this.logger.error('Error processing log:', error);
       // TODO: Handle error appropriately

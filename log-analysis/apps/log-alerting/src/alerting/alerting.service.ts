@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Subject } from 'rxjs';
 import { NotificationService } from '../notification/notification.service';
-import { AlertRule } from './alerting.interface';
+import { AlertCondition, AlertRule } from './alerting.interface';
 import { NotificationChannel } from '../notification/notification.interface';
 import { Collection, MongoClient, ObjectId } from 'mongodb';
 
@@ -98,7 +98,7 @@ export class AlertingService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  private matchConditions(log: any, conditions: any[]): boolean {
+  private matchConditions(log: any, conditions: AlertCondition[]): boolean {
     return conditions.every((condition) => {
       const fieldValue = log[condition.field];
       if (fieldValue === undefined) return false;

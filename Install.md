@@ -39,5 +39,5 @@ Query service: http://localhost:3004 and  Swagger UI: http://localhost:3004/api
 Ingestion service: http://localhost:3005 and Swagger UI: http://localhost:3005/api
 Alerting service: http://localhost:3006 and Swagger UI: http://localhost:3006/api
 
-Enjoy! :smiley:
+Enjoy! :)
 ```
