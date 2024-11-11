@@ -28,11 +28,11 @@ export class AlertingController {
   async create(
     @Body() createAlertRuleDto: CreateAlertRuleDto,
   ): Promise<AlertRule> {
-    const alertRule: AlertRule = {
+    const alertRule = {
       ...createAlertRuleDto,
       createdAt: new Date(),
       updatedAt: new Date(),
-    };
+    } as AlertRule;
     const result = await this.alertingService.create(alertRule);
     return { ...alertRule, _id: result.insertedId };
   }

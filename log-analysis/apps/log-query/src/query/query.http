@@ -13,8 +13,8 @@ Content-Type: application/json
 ###
 
 # Example request with specific values
-GET http://localhost:3004/query/logs?startTime=2021-10-01T00:00:00Z&endTime=2021-10-31T23:59:59Z&source=MyService&logLevel=INFO&message=Error&pattern=^Error.*&page=1&size=10
-Content-Type: application/json
+GET http://localhost:3004/query/logs?startTime=202110-01T00:00:00Z&endTime=2025-10-31T23:59:59Z&size=10
+Content-Type: application/json-
 
 ### Aggregate Logs Endpoint
 
